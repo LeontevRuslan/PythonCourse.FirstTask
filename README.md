@@ -16,6 +16,6 @@
     python book.py keys 
 
 
-  4. Получение значения по ключу
+  3. Получение значения по ключу
 
     python book.py get key
