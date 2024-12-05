@@ -1,15 +1,27 @@
 import csv
 import sys
+import os
+
+filename = 'results.csv'
 
 def set_new():
-    keyy = input("Какой ключ хотите добавить? ")
-    valuee = input("Укажите значения для ключа: ")
+    while True:
+        keyy = input("Какой ключ хотите добавить? ")
+        valuee = input("Укажите значения для ключа: ")
+        if set(keyy) & set('@/*#!$%^?\[]-_)+=;`~.,<>\'"|'):
+            print('\nНедопустимые символы!')
+            print('Введите другой ключ\n')
+        elif keyy == '' or valuee == '':
+            print('\nКлюч или значение не могут быть пустыми')
+            print('Введите новые ключ или значение\n')
+        else:
+            break
 
     with open("results.csv", "a", newline='') as file:
         csv_file = csv.writer(file)
         csv_file.writerow([keyy, valuee])
 
-    print('OK')
+    return keyy
 
 def keys():
     with open('results.csv', mode='r') as file:
@@ -21,13 +33,25 @@ def keys():
 
 def get_keys(value):
     data = keys()
-    print(data.get(' '.join(value[2:])))
+    return data.get(' '.join(value[2:]))
 
 
 if __name__ == "__main__":
+    file_is_not_exist = ('Файла не существует.'
+                         '\nИспользуйте команду set_new'
+                         '\nдля создания файла.')
     if 'set_new' in sys.argv:
         set_new()
-    if 'keys' in sys.argv:
-        print(list(keys().keys()))
-    if 'get' in sys.argv:
-        get_keys(sys.argv)
+        print('OK')
+    elif 'keys' in sys.argv:
+        if os.path.exists(filename):
+            print('\n'.join(list(keys().keys())))
+        else:
+            print(file_is_not_exist)
+    elif 'get' in sys.argv:
+        if os.path.exists(filename):
+            print(get_keys(sys.argv))
+        else:
+            print(file_is_not_exist)
+    else:
+        print('Такой команды не существует!')
