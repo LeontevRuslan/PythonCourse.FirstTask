@@ -4,6 +4,7 @@ import os
 
 filename = 'results.csv'
 
+
 def set_new():
     while True:
         keyy = input("Какой ключ хотите добавить? ")
@@ -23,6 +24,7 @@ def set_new():
 
     return keyy
 
+
 def keys():
     with open('results.csv', mode='r') as file:
         csv_reader = csv.reader(file)
@@ -30,6 +32,7 @@ def keys():
         for row in csv_reader:
             data[row[0]] = row[1]
         return data
+
 
 def get_keys(value):
     data = keys()
