@@ -1,29 +1,36 @@
 from rest_framework import serializers
-from .models import Task, Project
+from .models import Task, Project, User
 
-class TaskSerializer(serializers.ModelSerializer):
-
+class UserSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Task
-        fields = ['id', 'title', 'body',
-                  'deadline', 'status',
-                  'assigned_user_id', 'author',
-                  'project_id']
-
-    def update(self, instance, validated_data): 
-        instance.title = validated_data.get('title', instance.title)
-        instance.body = validated_data.get('body', instance.body)
-        instance.deadline = validated_data.get('deadline', instance.deadline)
-        instance.status = validated_data.get('status', instance.status)
-        instance.assigned_user_id = validated_data.get('assigned_user_id', instance.assigned_user_id)
-        instance.author = validated_data.get('author', instance.author)
-        instance.project_id = validated_data.get('project_id', instance.project_id)
-        instance.save()
-        return instance
-
+        model = User
+        fields = ['id', 'username', 'email']
 
 class ProjectSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Project
         fields = '__all__'
+
+class TaskSerializer(serializers.ModelSerializer):
+    assigned_user_id = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
+    author = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
+    project_id = serializers.PrimaryKeyRelatedField(queryset=Project.objects.all())
+
+    class Meta:
+        model = Task
+        fields = '__all__'
+
+    def create(self, validated_data):
+        
+        assigned_user_id = validated_data.pop('assigned_user_id')
+        author = validated_data.pop('author')
+        project_id = validated_data.pop('project_id')
+
+        task = Task.objects.create(
+            assigned_user_id=assigned_user_id,
+            author=author,
+            project_id=project_id,
+            **validated_data
+        )
+        return task

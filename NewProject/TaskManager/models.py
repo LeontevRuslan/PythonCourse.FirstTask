@@ -7,15 +7,17 @@ User = get_user_model()
 
 
 class BaseEntity(models.Model):
-    id = models.CharField(max_length=36, unique=True, editable=False, primary_key=True)
+    id = models.CharField(max_length=40, unique=True, editable=False, primary_key=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    def save(self):
+    def save(self, *args, **kwargs):
         if not self.prefix:
             raise Exception('prefix required')
         
         self.id = f'{self.prefix}-{uuid.uuid4()}'
+        print(len(self.id))
+        super().save(*args, **kwargs)
 
 
 class Project(BaseEntity):
