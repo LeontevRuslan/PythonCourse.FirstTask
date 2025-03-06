@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block title %}Projects{% endblock %}
+
+{% block content %}
+    <h1>Projects</h1>
+    <a href="{% url 'project-create' %}" class="btn btn-primary mb-3">Create New Project</a>
+    <ul class="list-group">
+        {% for project in object_list %}
+            <li class="list-group-item">
+                <a href="{% url 'project-detail' project.id %}">{{ project.title }}</a>
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}
