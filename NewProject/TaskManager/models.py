@@ -12,11 +12,10 @@ class BaseEntity(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def save(self, *args, **kwargs):
-        if not self.prefix:
-            raise Exception('prefix required')
-        
-        self.id = f'{self.prefix}-{uuid.uuid4()}'
-        print(len(self.id))
+        if not self.id:
+            if not self.prefix:
+                raise Exception('prefix required')
+            self.id = f'{self.prefix}-{uuid.uuid4()}'
         super().save(*args, **kwargs)
 
 
