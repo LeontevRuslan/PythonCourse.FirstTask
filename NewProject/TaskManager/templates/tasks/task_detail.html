@@ -3,12 +3,18 @@
 {% block title %}{{ task.title }}{% endblock %}
 
 {% block content %}
+<div class="container">
     <h1>{{ task.title }}</h1>
     <p>{{ task.body }}</p>
-    <p>Deadline: {{ task.deadline }}</p>
-    <p>Status: {{ task.status }}</p>
-    <p>Assigned to: {{ task.assigned_user_id.username }}</p>
-    <p>Author: {{ task.author.username }}</p>
+    <p><strong>Deadline:</strong> {{ task.deadline|date:"Y-m-d H:i" }}</p>
+    <p><strong>Status:</strong> 
+        <span class="badge bg-{% if task.status == 'todo' %}secondary{% elif task.status == 'in_progress' %}info{% else %}success{% endif %}">
+            {{ task.get_status_display }}
+        </span>
+    </p>
+    <p><strong>Assigned to:</strong> {{ task.assigned_user_id.username }}</p>
+    <p><strong>Author:</strong> {{ task.author.username }}</p>
     <a href="{% url 'task-update' project.id task.id %}" class="btn btn-secondary">Edit</a>
     <a href="{% url 'task-delete' project.id task.id %}" class="btn btn-danger">Delete</a>
+</div>
 {% endblock %}

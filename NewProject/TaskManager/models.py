@@ -30,11 +30,20 @@ class Project(BaseEntity):
 
 
 class Task(BaseEntity):
+    STATUS_CHOICES = [
+        ('todo', 'To Do'),
+        ('in_progress', 'In Progress'),
+        ('done', 'Done'),
+    ]
     prefix = 'TSK'
     title = models.CharField(max_length=20)
     body = models.TextField()
     deadline = models.DateTimeField(null = True)
-    status = models.CharField(max_length=20)
+    status = models.CharField(
+        max_length=20, 
+        choices=STATUS_CHOICES, 
+        default='todo'
+    )
     assigned_user_id = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name = 'assigned'
     )

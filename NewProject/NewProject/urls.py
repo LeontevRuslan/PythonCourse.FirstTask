@@ -27,7 +27,7 @@
 from django.urls import path
 from TaskManager.views import (
     ProjectListView, ProjectDetailView, ProjectCreateView, ProjectUpdateView, ProjectDeleteView,
-    TaskListView, TaskDetailView, TaskCreateView, TaskUpdateView, TaskDeleteView
+    TaskListView, TaskDetailView, TaskCreateView, TaskUpdateView, TaskDeleteView, TaskStatusUpdateView
 )
 
 urlpatterns = [
@@ -44,4 +44,5 @@ urlpatterns = [
     path('projects/<str:project_id>/tasks/<str:pk>/', TaskDetailView.as_view(), name='task-detail'),
     path('projects/<str:project_id>/tasks/<str:pk>/update/', TaskUpdateView.as_view(), name='task-update'),
     path('projects/<str:project_id>/tasks/<str:pk>/delete/', TaskDeleteView.as_view(), name='task-delete'),
+    path('projects/<str:project_id>/tasks/<str:pk>/update-status/', TaskStatusUpdateView.as_view(), name='task-update-status'),
 ]
