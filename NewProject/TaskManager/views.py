@@ -47,7 +47,7 @@ from .forms import ProjectForm, TaskForm
 class ProjectListView(ListView):
     model = Project
     template_name = 'projects/project_list.html'
-    context_object_name = 'object_list'
+    context_object_name = 'projects'
 
 class ProjectDetailView(DetailView):
     model = Project
@@ -79,7 +79,7 @@ class ProjectDeleteView(DeleteView):
 class TaskListView(ListView):
     model = Task
     template_name = 'tasks/task_list.html'
-    context_object_name = 'object_list'
+    context_object_name = 'tasks'
 
     def get_queryset(self):
         project_id = self.kwargs['project_id']
@@ -87,7 +87,20 @@ class TaskListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['project'] = Project.objects.get(id=self.kwargs['project_id'])
+        project = Project.objects.get(id=self.kwargs['project_id'])
+        tasks = context['tasks']
+
+        status_groups = [
+            ('To Do', tasks.filter(status='todo')),
+            ('In Progress', tasks.filter(status='in_progress')),
+            ('Done', tasks.filter(status='done'))
+        ]
+        
+        context.update({
+            'project': project,
+            'status_groups': status_groups,
+        })
+
         return context
     
 class TaskDetailView(DetailView):
@@ -134,3 +147,10 @@ class TaskDeleteView(DeleteView):
         context['task'] = self.object
         context['project'] = self.object.project_id
         return context
+    
+class TaskStatusUpdateView(UpdateView):
+    model = Task
+    fields = ['status']
+    
+    def get_success_url(self):
+        return reverse_lazy('task-list', kwargs={'project_id': self.kwargs['project_id']})
