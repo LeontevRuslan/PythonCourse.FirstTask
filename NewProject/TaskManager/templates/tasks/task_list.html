@@ -3,6 +3,13 @@
 {% block title %}Tasks for {{ project.title }}{% endblock %}
 
 {% block content %}
+<style>
+    .overdue-task {
+        border-left: 4px solid #ff4444;
+        background-color: #fff0f0;
+    }
+</style>
+
 <div class="container">
     <h1>Tasks for {{ project.title }}</h1>
     <a href="{% url 'task-create' project.id %}" class="btn btn-primary mb-3">Create New Task</a>
