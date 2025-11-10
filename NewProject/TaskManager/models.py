@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth import get_user_model
+from django.utils import timezone
 import uuid
 
 
@@ -53,6 +54,11 @@ class Task(BaseEntity):
     project_id = models.ForeignKey(
         Project, on_delete=models.CASCADE
     )
+
+    def is_overdue(self):
+        if self.deadline:
+            return self.deadline < timezone.now()
+        return False
 
     def __str__(self):
         return self.title
