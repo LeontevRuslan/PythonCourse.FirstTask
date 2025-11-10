@@ -22,6 +22,12 @@
                                 <a href="{% url 'task-detail' project.id task.id %}">{{ task.title }}</a>
                             </h5>
                             <p class="card-text">{{ task.body|truncatechars:50 }}</p>
+                            <p class="text-muted small">
+                                Deadline: {{ task.deadline|date:"Y-m-d H:i" }}
+                                {% if task.is_overdue %}
+                                    <span class="badge bg-danger ms-2">Просрочено</span>
+                                {% endif %}
+                            </p>
                             <form method="post" action="{% url 'task-update-status' project.id task.id %}">
                                 {% csrf_token %}
                                 <select name="status" class="form-select form-select-sm" onchange="this.form.submit()">
